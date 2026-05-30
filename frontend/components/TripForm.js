@@ -47,7 +47,7 @@ export default function TripForm({ onSuccess, onCancel }) {
         </div>
       </div>
       <div className="flex gap-2">
-        <button type="submit" disabled={loading} className="bg-maroon text-white px-4 py-2 rounded hover:bg-orange-700">{loading ? 'Generating...' : 'Generate Itinerary'}</button>
+        <button type="submit" disabled={loading} className="bg-maroon-400 text-white px-4 py-2 rounded hover:bg-orange-700">{loading ? 'Generating...' : 'Generate Itinerary'}</button>
         <button type="button" onClick={onCancel} className="bg-gray-300 px-4 py-2 rounded">Cancel</button>
       </div>
     </form>

@@ -1,18 +1,20 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 import API from '../utils/api';
+import { useAuth } from '../context/AuthContext';
 
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const router = useRouter();
+  const { login } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const res = await API.post('/auth/login', { email, password });
-      localStorage.setItem('token', res.data.token);
+      login(res.data.token);  // Use context login instead of direct localStorage
       router.push('/dashboard');
     } catch (err) {
       setError(err.response?.data?.error || 'Login failed');
@@ -24,9 +26,28 @@ export default function Login() {
       <h2 className="text-2xl font-bold text-maroon mb-4">Login</h2>
       {error && <p className="text-red-500 mb-2">{error}</p>}
       <form onSubmit={handleSubmit}>
-        <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full p-2 mb-3 border rounded" required />
-        <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} className="w-full p-2 mb-3 border rounded" required />
-        <button type="submit" className="w-full bg-orange-600 text-white py-2 rounded hover:bg-orange-700">Login</button>
+        <input 
+          type="email" 
+          placeholder="Email" 
+          value={email} 
+          onChange={(e) => setEmail(e.target.value)} 
+          className="w-full p-2 mb-3 border rounded" 
+          required 
+        />
+        <input 
+          type="password" 
+          placeholder="Password" 
+          value={password} 
+          onChange={(e) => setPassword(e.target.value)} 
+          className="w-full p-2 mb-3 border rounded" 
+          required 
+        />
+        <button 
+          type="submit" 
+          className="w-full bg-orange-600 text-white py-2 rounded hover:bg-orange-700"
+        >
+          Login
+        </button>
       </form>
     </div>
   );
