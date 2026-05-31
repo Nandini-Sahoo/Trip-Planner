@@ -41,6 +41,7 @@ export default function Register() {
           onChange={(e) => setPassword(e.target.value)} 
           className="w-full p-2 mb-3 border rounded" 
           required 
+          autoComplete="new-password"
         />
         <button 
           type="submit" 
