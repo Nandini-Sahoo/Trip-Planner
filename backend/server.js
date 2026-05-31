@@ -14,7 +14,7 @@ const app = express();
 // Allow both localhost AND your production frontend
 const allowedOrigins = [
   'http://localhost:3000',
-  'https://trip-planner-delta-opal.vercel.app/'  
+  'https://trip-planner-delta-opal.vercel.app'  
 ];
 
 app.use(cors({ 
