@@ -30,6 +30,8 @@ export async function generateTripPlan(destination, days, budgetType, interests)
             - Activities must be specific to ${destination}.
 
             Return ONLY valid JSON:
+
+            Provide realistic estimated costs in USD.
               {
                 "itinerary": [
                   {
@@ -37,13 +39,14 @@ export async function generateTripPlan(destination, days, budgetType, interests)
                     "activities": ["activity1", "activity2"]
                   }
                 ],
-                "budget": {
-                  "flights": 0,
-                  "accommodation": 0,
-                  "food": 0,
-                  "activities": 0,
-                  "total": 0
-                },
+                
+                  "budget": {
+                    "flights": 500,
+                    "accommodation": 300,
+                    "food": 150,
+                    "activities": 100,
+                    "total": 1050
+                  },
                 "hotels": [
                   {
                     "name": "Hotel Name",
