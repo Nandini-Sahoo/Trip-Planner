@@ -1,6 +1,6 @@
 # Trip Planner
 
-A full-stack web application that allows users to generate complete travel itineraries using an AI agent (OpenAI GPT-3.5). Users provide travel details such as destination, number of days, interests, and budget. The AI agent generates a day-by-day travel plan along with estimated budget and hotel suggestions. Users can also modify the itinerary dynamically.
+A full-stack web application that allows users to generate complete travel itineraries using an AI agent (gemini-2.5-flash). Users provide travel details such as destination, number of days, interests, and budget. The AI agent generates a day-by-day travel plan along with estimated budget and hotel suggestions. Users can also modify the itinerary dynamically.
 
 ## Chosen Tech Stack
 
@@ -16,7 +16,7 @@ A full-stack web application that allows users to generate complete travel itine
 ### Prerequisites
 - Node.js (v18 or later)
 - MongoDB Atlas account (free tier)
-- OpenAI API key (get from [platform.openai.com](https://platform.openai.com))
+- Google AI API key (get from [aistudio.google.com](https://aistudio.google.com/))
 
 ### Local Development
 
@@ -51,9 +51,9 @@ npm run dev
 **Backend (.env)**
 ```env
 PORT=5000
-MONGO_URI=mongodb+srv://username:password@cluster.mongodb.net/travelplanner
+MONGO_URI=mongodb+srv://username:password@cluster.mongodb.net/trip_planner_db
 JWT_SECRET=your_jwt_secret_key
-OPENAI_API_KEY=sk-your_openai_api_key
+GEMINI_API_KEY=sk-your_geminiai_api_key
 ```
 
 **Frontend (.env.local)**
@@ -84,8 +84,8 @@ NEXT_PUBLIC_API_URL=http://localhost:5000/api
                     │                           │
                     ▼                           ▼
             ┌─────────────┐              ┌─────────────┐
-            │   MongoDB   │              │  OpenAI API │
-            │   Atlas     │              │   GPT-3.5   │
+            │   MongoDB   │              │ GoogleAI API│
+            │   Atlas     │              │  flash-2.5  │
             └─────────────┘              └─────────────┘
 ```
 
@@ -118,16 +118,39 @@ NEXT_PUBLIC_API_URL=http://localhost:5000/api
 ## AI Agent Design and Purpose
 
 ### Design Overview
-The AI agent is implemented as a service layer (`aiService.js`) that communicates with OpenAI's GPT-3.5 API. It has three primary functions:
+The AI agent is implemented as a service layer (`aiService.js`) that communicates with GoogleAI's gemini-2.5-flash API. It has three primary functions:
 
 1. **generateTripPlan()** – Creates complete itinerary, budget, and hotel suggestions
 2. **regenerateDay()** – Modifies a specific day based on user instruction
 
 ### Prompt Engineering Strategy
 ```javascript
-const prompt = `Generate a travel itinerary for ${destination} for ${days} days. 
-Budget type: ${budgetType}. Interests: ${interests.join(', ')}. 
-Return JSON with structure: { "itinerary": [...], "budget": {...}, "hotels": [...] }`
+const prompt = `
+            Create a detailed ${days}-day travel itinerary for ${destination}.
+            Budget: ${budgetType}
+            Interests: ${interests.join(", ")}
+            IMPORTANT:
+            - Each day must be different.
+            - Do not repeat activities.
+            - Include real attractions, restaurants, and experiences.
+            - Activities must be specific to ${destination}.
+            Return ONLY valid JSON:
+            Provide realistic estimated costs in USD.
+              {"itinerary": [
+                  {    "day": 1,
+                    "activities": ["activity1", "activity2"]
+                  }  ],   
+                  "budget": {
+                    "flights": 500,
+                    "accommodation": 300,
+                    "food": 150,
+                    "activities": 100,
+                    "total": 1050
+                  },
+                "hotels": [
+                  {       "name": "Hotel Name",
+                          "description": "Description"
+                  } ]    } `;
 ```
 
 ### Why This Design?
@@ -181,7 +204,7 @@ AI-generated itineraries are **static and generic**. This feature bridges the ga
 | **JavaScript over TypeScript** | Less type safety | Faster development, simpler setup |
 | **MongoDB over PostgreSQL** | Less relational integrity | Flexible itinerary schema changes frequently |
 | **JWT over sessions** | No logout from all devices | Stateless, easier to scale |
-| **OpenAI GPT-3.5 over GPT-4** | Less accurate responses | Lower cost, faster response times |
+| **GoogleAI gemini-2.5-flash over GPT-4** | Less accurate responses | Lower cost, faster response times |
 | **Single root .gitignore** | Less granular control | Simpler maintenance |
 | **AI fallback responses** | Less intelligent if API fails | Graceful degradation |
 
@@ -249,11 +272,11 @@ const tripSchema = {
 
 ## License
 
-MIT License - Free for educational and personal use.
+License - Free for educational and personal use.
 
 ## Acknowledgements
 
-- OpenAI for GPT-3.5 API
+- GoogleAI for gemini-2.5-flash API
 - Next.js team for the React framework
 - MongoDB for free Atlas tier
 - Tailwind CSS for utility-first styling
